@@ -36,5 +36,9 @@ app.use(
 );
 app.use(cookieParser());
 
+app.get('/', (req, res) => {
+  res.sendStatus(200)
+})
+
 app.use("/art", artRoute);
 app.use("/user", userRoute);

@@ -13,7 +13,9 @@ import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getArts);
+router.use(authMiddleware)
+
+router.get("/", getArts);
 
 router.get("/search", getArtsBySearch);
 

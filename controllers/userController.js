@@ -22,7 +22,7 @@ export const userLogin = async (req, res) => {
       { id: existedUser._id },
       `${process.env.ACCESS_TOKEN_SECRET}`,
       {
-        expiresIn: "10s",
+        expiresIn: "60s",
       }
     );
 
@@ -69,7 +69,7 @@ export const refreshTokenUser = (req, res) => {
         const accessToken = jwt.sign(
           { id: foundUser._id },
           `${process.env.ACCESS_TOKEN_SECRET}`,
-          { expiresIn: "10s" }
+          { expiresIn: "60s" }
         );
 
         return res.status(200).json({ data: accessToken });
@@ -134,13 +134,11 @@ export const getAuthorUser = async (req, res) => {
 };
 
 export const editUser = async (req, res) => {
-  /* const token = req.cookies.refreshJWT; */
   const editedUser = req.body;
   const { id } = req.query;
 
   try {
     if (id) {
-      /* const decodedToken = await jwt.decode(token); */
       const updatedUser = await User.findByIdAndUpdate(
         id,
         {

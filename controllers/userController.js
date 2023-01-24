@@ -3,80 +3,6 @@ import jwt from "jsonwebtoken";
 
 import User from "../models/userModel.js";
 
-export const userLogin = async (req, res) => {
-  const { userName, password } = req.body;
-  try {
-    const existedUser = await User.findOne({ userName });
-    if (!existedUser)
-      return res
-        .status(400)
-        .json({ message: `User ${userName} is not exists.` });
-    const correctPassword = await bcrypt.compare(
-      password,
-      existedUser.password
-    );
-
-    if (!correctPassword)
-      return res.status(400).json({ message: "Your password is incorrect." });
-    const accessToken = jwt.sign(
-      { id: existedUser._id },
-      `${process.env.ACCESS_TOKEN_SECRET}`,
-      {
-        expiresIn: "60s",
-      }
-    );
-
-    const refreshToken = jwt.sign(
-      { id: existedUser._id },
-      `${process.env.REFRESH_TOKEN_SECRET}`,
-      {
-        expiresIn: "1d",
-      }
-    );
-
-    res.cookie("refreshJWT", refreshToken, {
-      httpOnly: true,
-      sameSite: "none",
-      secure: true,
-      maxAge: 60 * 60 * 24 * 1000,
-    });
-
-    res.status(200).json({ data: existedUser, accessToken });
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-};
-
-export const refreshTokenUser = (req, res) => {
-  const cookieRefreshToken = req.cookies;
-
-  if (!cookieRefreshToken?.refreshJWT)
-    res.status(403).json({ message: "Unauthorized" });
-  else {
-    const refreshToken = cookieRefreshToken.refreshJWT;
-
-    jwt.verify(
-      refreshToken,
-      `${process.env.REFRESH_TOKEN_SECRET}`,
-      async (err, decoded) => {
-        if (err) return res.status(403).json({ message: "Forbidden" });
-
-        const foundUser = await User.findOne({ _id: decoded.id }).exec();
-
-        if (!foundUser)
-          return res.status(403).json({ message: "Unauthorized" });
-
-        const accessToken = jwt.sign(
-          { id: foundUser._id },
-          `${process.env.ACCESS_TOKEN_SECRET}`,
-          { expiresIn: "60s" }
-        );
-
-        return res.status(200).json({ data: accessToken });
-      }
-    );
-  }
-};
 
 export const userRegister = async (req, res) => {
   const { fullName, email, userName, password } = req.body;
@@ -93,7 +19,6 @@ export const userRegister = async (req, res) => {
       userName,
       password: hashedPassword,
       avatar: "",
-      status: "",
     });
 
     res
@@ -104,13 +29,6 @@ export const userRegister = async (req, res) => {
   }
 };
 
-export const userLogout = async (req, res) => {
-  try {
-    res.clearCookie("refreshJWT", { path: "/", domain: "localhost" }).send();
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-};
 
 export const getLoginUser = async (req, res) => {
   const { id } = req.query;

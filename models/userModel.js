@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     userName: {
       type: String,
@@ -23,8 +24,9 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
-    status: { type: String },
-    banner: { type: String },
+    status: {
+      type: String,
+    },
   },
   {
     timestamps: true,

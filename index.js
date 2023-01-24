@@ -3,10 +3,12 @@ import cors from "cors";
 import morgan from "morgan";
 import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
-import artRoute from "./routes/artRoute.js";
-import userRoute from "./routes/userRoute.js";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+
+import artRoute from "./routes/artRoute.js";
+import userRoute from "./routes/userRoute.js";
+import authRoute from "./routes/authRoute.js";
 
 const app = express();
 
@@ -42,3 +44,4 @@ app.get('/', (req, res) => {
 
 app.use("/art", artRoute);
 app.use("/user", userRoute);
+app.use("/auth", authRoute);

@@ -8,18 +8,18 @@ import { letterFilter } from "../middleware/letterFilter.js";
 export const getArts = async (req, res) => {
   const { page } = req.query;
   try {
-    const LIMIT = 12;
-    const startIndexPerPage = (Number(page) - 1) * LIMIT; //thứ tự bắt đầu ở mỗi page
+    const LIMIT = 10;
+    const startNumberPerPage = (Number(page) - 1) * LIMIT;
     const total = await Arts.countDocuments({});
+    const numberOfPages = Math.ceil(total / LIMIT);
     const arts = await Arts.find()
       .populate("author")
       .sort({ updatedAt: -1, createdAt: -1, title: 1 })
       .limit(LIMIT)
-      .skip(startIndexPerPage);
+      .skip(startNumberPerPage);
     return res.status(200).json({
       data: arts,
-      currentPage: Number(page),
-      numberOfPages: Math.ceil(total / LIMIT),
+      numberOfPages: numberOfPages,
     });
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -39,30 +39,46 @@ export const getArt = async (req, res) => {
   }
 };
 
-export const getManageArts = async (req, res) => {
-  /* const currentToken = req.cookies.refreshJWT;
-  const decodedToken = jwt.decode(currentToken); */
-  const { authorId } = req.query;
+export const getArtsByAuthor = async (req, res) => {
+  const { page } = req.query;
+  const { author } = req.params;
+  const LIMIT = 10;
+
   try {
-    const manageArts = await Arts.find({
-      author: authorId,
-    });
+    const currentAuthor = await User.findOne({ userName: author });
+    const startNumberPerPage = (Number(page) - 1) * LIMIT;
+    const arts = await Arts.find({ author: currentAuthor._id })
+      .sort({ updatedAt: -1, createdAt: -1, title: 1 })
+      .limit(LIMIT)
+      .skip(startNumberPerPage);
+    const total = arts.length;
     res.status(200).json({
-      data: manageArts,
+      data: arts,
+      numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 
 export const getArtsBySearch = async (req, res) => {
-  const { search } = req.query;
+  const { search } = req.params;
+  const { page } = req.query;
+  const LIMIT = 10;
+  const startNumberPerPage = (Number(page) - 1) * LIMIT;
   try {
     const searchSlug = new RegExp(letterFilter(search).replace(/\s/g, ""), "i");
-    const arts = await Arts.find({ searchSlug }).populate("author");
 
+    const arts = await Arts.find({ searchSlug })
+      .populate("author")
+      .sort({ updatedAt: -1, createdAt: -1, title: 1 })
+      .limit(LIMIT)
+      .skip(startNumberPerPage);
+
+    const total = arts.length;
     res.status(200).json({
       data: arts,
+      numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -78,6 +94,7 @@ export const postArt = async (req, res) => {
     searchSlug: letterFilter(art.title).toLowerCase().replace(/\s/g, ""),
     author: authorId,
   });
+
   try {
     await newArt.save();
     res.status(200).json({ data: newArt });
@@ -115,18 +132,6 @@ export const editArt = async (req, res) => {
     );
 
     return res.status(200).json({ data: updatedPost });
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-};
-
-export const getArtsByAuthor = async (req, res) => {
-  const { author } = req.query;
-
-  try {
-    const currentAuthor = await User.findOne({ userName: author });
-    const arts = await Arts.find({ author: currentAuthor._id });
-    res.status(200).json({ data: arts });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

@@ -6,22 +6,19 @@ import {
   postArt,
   deleteArt,
   editArt,
-  getManageArts,
   getArtsByAuthor,
 } from "../controllers/artController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.use(authMiddleware)
+/* router.use(authMiddleware) */
 
 router.get("/", getArts);
 
-router.get("/search", getArtsBySearch);
+router.get("/search/:search", getArtsBySearch);
 
-router.get("/gallery", getArtsByAuthor);
-
-router.get("/manage", getManageArts);
+router.get("/author/:author", getArtsByAuthor);
 
 router.get("/:id", getArt);
 

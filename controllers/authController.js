@@ -7,7 +7,6 @@ import bcrypt from "bcryptjs";
 
 export const userLogin = async (req, res) => {
   const { userName, password } = req.body;
-  console.log(userName, password);
   try {
     const existedUser = await User.findOne({ userName });
     if (!existedUser)
@@ -24,14 +23,17 @@ export const userLogin = async (req, res) => {
 
     const { accessToken, refreshToken } = await generateToken(existedUser._id);
 
-    res.cookie("refreshJWT", refreshToken, {
+    /* res.cookie("refreshJWT", refreshToken, {
       httpOnly: true,
       sameSite: "none",
       secure: true,
       maxAge: 60 * 60 * 24 * 1000,
-    });
+    }); */
 
-    res.status(200).json({ data: existedUser, accessToken, refreshToken });
+    return res.status(200).json({ data: {
+      _id: existedUser._id,
+      userName: existedUser.userName,
+    }, accessToken, refreshToken });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

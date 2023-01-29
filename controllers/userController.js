@@ -53,7 +53,7 @@ export const getAuthorUser = async (req, res) => {
 
 export const editUser = async (req, res) => {
   const editedUser = req.body;
-  const { id } = req.query;
+  const { id } = req.params;
 
   try {
     if (id) {

@@ -31,9 +31,9 @@ export const getArt = async (req, res) => {
   try {
     const art = await Arts.findOne({ _id: id }).populate("author");
     if (!art) {
-      res.status(404).json({ message: "No such art" });
+      return res.status(404).json({ message: "No such art" });
     }
-    res.status(200).json({ data: art });
+    return res.status(200).json({ data: art });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -88,11 +88,9 @@ export const getArtsBySearch = async (req, res) => {
 export const postArt = async (req, res) => {
   const art = req.body;
 
-  const { authorId } = req.query;
   const newArt = new Arts({
     ...art,
     searchSlug: letterFilter(art.title).toLowerCase().replace(/\s/g, ""),
-    author: authorId,
   });
 
   try {
@@ -130,7 +128,7 @@ export const editArt = async (req, res) => {
       },
       { new: true }
     );
-
+    if (!updatedPost) return res.status(404).json({ message: "Not Found" });
     return res.status(200).json({ data: updatedPost });
   } catch (err) {
     return res.status(500).json({ message: err.message });

@@ -12,6 +12,6 @@ router.get("/:author", getAuthorUser);
 
 router.post("/register", userRegister);
 
-router.patch("/edit", editUser);
+router.patch("/edit/:id", editUser);
 
 export default router;

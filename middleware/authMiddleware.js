@@ -7,9 +7,10 @@ const authMiddleware = (req, res, next) => {
     return res.status(403).json({ message: "Forbidden" });
   }
   const token = authHeader?.split(" ")[1]; //Authorization: "Bearer (token)"
-
+  
   if (token) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      console.log(err)
       if (err) res.status(401).json({ message: "Unauthorized " });
       req._id = decoded.id;
       next();

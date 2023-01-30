@@ -13,9 +13,6 @@ const generateToken = async (userId) => {
   const refreshToken = jwt.sign(
     { id: userId },
     `${process.env.REFRESH_TOKEN_SECRET}`,
-    {
-      expiresIn: "10s",
-    }
   );
 
   const existedUser = await Auth.findOne({ userId })

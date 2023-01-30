@@ -41,7 +41,7 @@ export const userLogin = async (req, res) => {
 
 export const refreshTokenUser = (req, res) => {
   const { refreshToken } = req.body;
-
+console.log(process.env.REFRESH_TOKEN_SECRET)
   if (!refreshToken) res.status(403).json({ message: "Unauthorized" });
   else {
     jwt.verify(
@@ -58,7 +58,7 @@ export const refreshTokenUser = (req, res) => {
         const accessToken = jwt.sign(
           { id: foundUser._id },
           `${process.env.ACCESS_TOKEN_SECRET}`,
-          { expiresIn: "60s" }
+          { expiresIn: "10s" }
         );
 
         return res.status(200).json({ data: accessToken });

@@ -3,7 +3,7 @@ import store from "@/store";
 import { refreshTokenThunk } from "@/thunks/authThunk";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://art-blog-demo.onrender.com/",
   headers: {
     Accept: "application/json",
     "Access-Control-Allow-Origin": "*",

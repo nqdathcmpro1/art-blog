@@ -14,11 +14,17 @@ export const getArts = async (req, res) => {
     const numberOfPages = Math.ceil(total / LIMIT);
     const arts = await Arts.find()
       .populate("author")
-      .sort({ updatedAt: -1, createdAt: -1, title: 1 })
+      .sort({ createdAt: -1, title: 1 })
       .limit(LIMIT)
       .skip(startNumberPerPage);
     return res.status(200).json({
-      data: arts,
+      data: arts.map((art) => {
+        return {
+          _id: art._id,
+          title: art.title,
+          url: art.url,
+        };
+      }),
       numberOfPages: numberOfPages,
     });
   } catch (err) {
@@ -53,7 +59,13 @@ export const getArtsByAuthor = async (req, res) => {
       .skip(startNumberPerPage);
     const total = arts.length;
     res.status(200).json({
-      data: arts,
+      data: arts.map((art) => {
+        return {
+          _id: art._id,
+          title: art.title,
+          url: art.url,
+        };
+      }),
       numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (err) {
@@ -77,7 +89,13 @@ export const getArtsBySearch = async (req, res) => {
 
     const total = arts.length;
     res.status(200).json({
-      data: arts,
+      data: arts.map(art => {
+        return {
+          _id: art._id,
+          title: art.title,
+          url: art.url
+        }
+      }),
       numberOfPages: Math.ceil(total / LIMIT),
     });
   } catch (err) {

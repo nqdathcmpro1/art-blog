@@ -6,7 +6,7 @@ const artsSchema = new mongoose.Schema(
     url: String,
     author: {
       type: String,
-      ref: "User"
+      ref: "User",
     },
     searchSlug: String,
   },

@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import artRoute from "./routes/artRoute.js";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
+import commentRoute from "./routes/commentRoute.js";
 
 const app = express();
 
@@ -45,3 +46,4 @@ app.get('/', (req, res) => {
 app.use("/art", artRoute);
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
+app.use("/comment", commentRoute)

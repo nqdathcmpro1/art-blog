@@ -17,7 +17,6 @@ const MasonryArtList = ({
   setChosenArtId,
   children,
 }) => {
-  const user = useSelector((state) => state.authReducer.loginUser);
 
   const breakpointColumnsObj = {
     default: 5,
@@ -72,17 +71,17 @@ const MasonryArtList = ({
                       {art.title}
                     </h1>
                     {authorEdit && (
-                      <div className="w-1/4 flex items-center justify-between gap-2">
+                      <div className="w-1/4 flex  items-center justify-between gap-2">
                         <EditOutlined
                           title="Edit"
                           onClick={() => handleEditArt(art._id)}
-                          className="w-8 font-extrabold aspect-square rounded-full overflow-hidden bg-slate-300 flex items-center justify-center border-2 border-black"
+                          className="w-8 text-white text-lg font-extrabold aspect-square rounded-full overflow-hidden bg-black/30 flex items-center justify-center"
                         />
 
                         <DeleteOutlined
                           title="Delete"
                           onClick={() => handleDeleteArt(art._id)}
-                          className="w-8 font-extrabold aspect-square rounded-full overflow-hidden bg-slate-300 flex items-center justify-center border-2 border-black"
+                          className="w-8 text-white text-lg font-extrabold aspect-square rounded-full overflow-hidden bg-black/30 flex items-center justify-center"
                         />
                       </div>
                     )}

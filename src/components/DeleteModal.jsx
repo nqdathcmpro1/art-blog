@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { fetchDetailArt, deleteArt } from "@/api/artApi";
 
-const DeleteModal = ({ deleteModalOpen, setDeleteModalOpen, chosenArtId }) => {
+const DeleteModal = ({ deleteModalOpen, setDeleteModalOpen, handleDelete, children }) => {
   const customStyles = {
     overlay: {
       zIndex: 20,
@@ -23,31 +23,9 @@ const DeleteModal = ({ deleteModalOpen, setDeleteModalOpen, chosenArtId }) => {
     },
   };
 
-  const queryClient = useQueryClient();
 
-  const { data } = useQuery({
-    queryKey: ["fetchdeleteArt", chosenArtId],
-    queryFn: () => fetchDetailArt(chosenArtId),
-  });
 
-  const deleteArtMutation = useMutation({
-    mutationKey: ["deleteArt"],
-    mutationFn: () => {
-      return deleteArt(chosenArtId);
-    },
-    onSuccess: (data) => {
-      if (data.status === 200) {
-        setDeleteModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["authorArts"] });
-        queryClient.fetchQuery({ queryKey: ["authorArts"]})
-      }
-    },
-  });
-
-  const handleDeleteArt = () => {
-    deleteArtMutation.mutate();
-  };
-
+  
   const handleSetCloseModal = () => {
     setDeleteModalOpen(false);
   };
@@ -63,7 +41,7 @@ const DeleteModal = ({ deleteModalOpen, setDeleteModalOpen, chosenArtId }) => {
       <div className="rounded-xl h-full flex flex-col items-center justify-between gap-5">
         <h1 className="text-3xl font-extrabold">Delete</h1>
         <p className="text-xl break-words">
-          Do you want to delete "{data?.data.data.title}" ?
+          {children}
         </p>
         <div className="w-full md:w-8/12 flex items-center justify-between">
           <button className="font-semibold" onClick={handleSetCloseModal}>
@@ -71,7 +49,7 @@ const DeleteModal = ({ deleteModalOpen, setDeleteModalOpen, chosenArtId }) => {
           </button>
           <button
             className="font-semibold bg-red-600 rounded-full px-2 py-1 text-white"
-            onClick={handleDeleteArt}
+            onClick={handleDelete}
           >
             Accept
           </button>

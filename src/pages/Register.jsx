@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "@/api/userApi";
 
 import Input from "@/components/authLayouts/Input";
-import SubmitButton from "@/components/authLayouts/SubmitButton";
+import SubmitButton from "@/components/SubmitButton";
 import Notification from "@/components/authLayouts/Notification";
 
 const Register = () => {

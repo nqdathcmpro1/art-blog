@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authSlice } from "@/slices/authSlice";
@@ -8,13 +8,19 @@ import * as Yup from "yup";
 
 import defaultAvatar from "public/default-avatar.png";
 import { editUser, fetchAuthor } from "@/api/userApi";
+import SubmitButton from "@/components/SubmitButton";
+import AvatarModal from "@/components/AvatarModal";
 
 const EditUser = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
+  const queryClient = useQueryClient();
+
   const user = useSelector((state) => state.authReducer.loginUser);
+
+  const [isOpenModal, setIsOpenModal] = useState(false)
 
   const { data, isFetching } = useQuery({
     queryKey: ["editUser"],
@@ -30,6 +36,7 @@ const EditUser = () => {
     onSuccess: (data) => {
       if (data.status === 200) {
         dispatch(authSlice.actions.updateUser(data?.data.data));
+        queryClient.invalidateQueries({ queryKey: ["editUser"] });
         navigate(`/user/${user.userName}`);
       }
     },
@@ -63,18 +70,13 @@ const EditUser = () => {
     },
   });
 
-  const convertBaseUrl = (url) => {
-    const reader = new FileReader();
-    if (url) reader.readAsDataURL(url);
-
-    reader.onload = () => {
-      formik.setFieldValue("avatar", reader.result);
-    };
+  const handleChange = (result) => {
+    formik.setFieldValue("avatar", result);
   };
 
-  const handleChange = (e) => {
-    convertBaseUrl(e.target.files[0]);
-  };
+  const handleOpenAvatarModal = () => {
+    setIsOpenModal(true)
+  }
 
   return (
     <>
@@ -84,24 +86,7 @@ const EditUser = () => {
           className="w-full md:w-10/12 h-fit p-5 shadow-2xl rounded-2xl bg-slate-100 overflow-hidden flex flex-col items-center gap-5 md:flex-row"
         >
           <div className="w-full md:w-1/3 flex items-center justify-center">
-            <label
-              htmlFor="avatar"
-              className="w-1/2 md:w-full aspect-square rounded-full overflow-hidden cursor-pointer"
-            >
-              <img
-                src={formik.values.avatar || defaultAvatar}
-                alt="avatar"
-                className="object-contain"
-                onChange={handleChange}
-              />
-            </label>
-            <input
-              id="avatar"
-              type="file"
-              name="avatar"
-              onChange={handleChange}
-              className="hidden"
-            />
+            <img onClick={handleOpenAvatarModal} className="md:w-5/6 w-1/2 cursor-pointer aspect-square rounded-full" src={formik?.values.avatar || defaultAvatar} />
           </div>
           <div className="w-full md:w-2/3 h-full flex flex-col items-center justify-center gap-5">
             <input
@@ -129,17 +114,15 @@ const EditUser = () => {
               onChange={formik.handleChange}
               className="text-md font-semibold resize-none w-full h-32 rounded-xl p-5"
             />
-            <button
-              type="submit"
-              className="w-32 p-1 font-semibold text-2xl text-white bg-red-600 hover:bg-red-700 rounded-full"
-            >
+            <SubmitButton loading={editUserMutation.isLoading}>
               Send
-            </button>
+            </SubmitButton>
           </div>
         </form>
       ) : (
         <Navigate to="/auth/login" />
       )}
+      <AvatarModal isOpen={isOpenModal} setIsOpen={setIsOpenModal} handleChange={handleChange} />
     </>
   );
 };

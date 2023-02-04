@@ -10,6 +10,8 @@ const Home = () => {
     queryFn: ({ pageParam = 1 }) => {
       return fetchHomeArts(pageParam);
     },
+    
+    /* enabled: false, */
 
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.data.numberOfPages > allPages.length
@@ -17,6 +19,7 @@ const Home = () => {
         : undefined;
     },
   });
+
 
   return (
     <div className="w-full">

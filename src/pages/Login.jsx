@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,memo } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 
 import Input from "@/components/authLayouts/Input";
-import SubmitButton from "@/components/authLayouts/SubmitButton";
+import SubmitButton from "@/components/SubmitButton";
 import Notification from "@/components/authLayouts/Notification";
 
 import { loginThunk } from "@/thunks/authThunk";
@@ -18,7 +18,7 @@ const Login = () => {
 
   const [loginError, setLoginError] = useState(null)
 
-  const loading = useSelector(state =>  state.authReducer.loading)
+  const loading = useSelector(state => state.authReducer.loading)
 
   const formik = useFormik({
     initialValues: {
@@ -35,7 +35,8 @@ const Login = () => {
         .max(16, "Max 16 characters")
         .required("This field is required"),
     }),
-    validateOnBlur: true,
+    validateOnChange: false,
+    validateOnBlur: false ,
     onSubmit: async (values) => {
       setLoginError(null)
       const data = await dispatch(loginThunk(values))
@@ -80,4 +81,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default memo(Login);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import defaultAvatar from "@/public/default-avatar.png";
@@ -8,7 +8,7 @@ import defaultAvatar from "@/public/default-avatar.png";
 import MasonryArtList from "@/components/MasonryArtList";
 import EditModal from "@/components/EditModal";
 import { fetchAuthor } from "@/api/userApi";
-import { fetchAuthorArts } from "@/api/artApi";
+import { fetchAuthorArts, deleteArt } from "@/api/artApi";
 import DeleteModal from "@/components/DeleteModal";
 
 const AuthorPage = () => {
@@ -22,6 +22,8 @@ const AuthorPage = () => {
   const [chosenArtId, setChosenArtId] = useState("");
 
   const currentUser = useSelector((state) => state.authReducer.loginUser);
+
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setIsAuthor(currentUser?.userName === author);
@@ -58,6 +60,23 @@ const AuthorPage = () => {
       const splitName = fullName.split(" ");
       return splitName[splitName.length - 1];
     }
+  };
+
+  const deleteArtMutation = useMutation({
+    mutationKey: ["deleteArt"],
+    mutationFn: () => {
+      return deleteArt(chosenArtId);
+    },
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        setDeleteModalOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["authorArts"] });
+      }
+    },
+  });
+
+  const handleDeleteArt = () => {
+    deleteArtMutation.mutate();
   };
 
   return (
@@ -141,10 +160,10 @@ const AuthorPage = () => {
       />
 
       <DeleteModal
-        chosenArtId={chosenArtId}
+        handleDelete={handleDeleteArt}
         deleteModalOpen={deleteModalOpen}
         setDeleteModalOpen={setDeleteModalOpen}
-      />
+      >Do you want to delete this art ?</DeleteModal>
     </div>
   );
 };

@@ -2,11 +2,13 @@ import React from "react";
 import { Oval } from "react-loader-spinner";
 
 
-const SubmitButton = ({ loading, children }) => {
+const SubmitButton = ({ disabled, loading, children, onClick }) => {
   return (
     <button
       type="submit"
-      className="w-32 p-1 bg-red-600 text-white text-xl font-semibold rounded-full flex items-center justify-center hover:bg-red-700"
+      onClick={onClick}
+      disabled={disabled}
+      className="px-5 py-1 bg-red-600 text-white text-xl font-semibold rounded-full flex items-center justify-center hover:bg-red-700 disabled:opacity-30"
     >
       {loading ? (
         <Oval

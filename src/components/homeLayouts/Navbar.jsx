@@ -14,6 +14,7 @@ const Navbar = () => {
   const [searchText, setSearchText] = useState("");
 
   const navBarRef = useRef();
+  const menuButtonRef = useRef();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,7 +23,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const windowClick = (e) => {
-      if (!e.composedPath().includes(navBarRef.current)) setOpenMenu(false);
+      if (
+        !e.composedPath().includes(navBarRef.current) &&
+        !e.composedPath().includes(menuButtonRef.current)
+      )
+        setOpenMenu(false);
     };
     window.addEventListener("click", windowClick);
     return () => window.removeEventListener("click", windowClick);
@@ -61,18 +66,20 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      ref={navBarRef}
-      className="w-100 md:px-5 sticky top-0 shadow-lg md:flex md:items-center md:justify-between bg-white z-10"
-    >
+    <nav className="w-full md:px-5 max-h-[1000px] sticky top-0 shadow-lg md:flex md:items-center justify-between bg-white z-20">
       <span
         name="logo"
-        className="w-100 py-2 md:w-32 flex items-center justify-between cursor-pointer"
+        className="w-full py-2 md:w-32 flex items-center justify-between "
       >
         <Link to="/">
-          <img src={logo} alt="logo" className="w-40 h-16 object-contain" />
+          <img
+            src={logo}
+            alt="logo"
+            className="w-40 h-16 object-contain cursor-pointer"
+          />
         </Link>
         <MenuOutlined
+          ref={menuButtonRef}
           title="Menu"
           onClick={handleOpenMenu}
           className="w-16 h-16 p-2 text-3xl md:hidden font-extrabold flex items-center justify-center cursor-pointer rounded-full hover:bg-slate-300/50"
@@ -80,6 +87,7 @@ const Navbar = () => {
       </span>
 
       <ul
+        ref={navBarRef}
         className={
           "md:flex absolute bg-white w-full px-3 py-5 right-0 md:static md:items-center items-end justify-end shadow-lg md:shadow-none gap-5 flex-col md:flex-row " +
           (openMenu ? "flex" : "hidden")

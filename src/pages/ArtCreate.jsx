@@ -3,15 +3,24 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import defaultAvatar from "@/public/default-avatar.png";
 import { createArt } from "@/api/artApi";
+import SubmitButton from "@/components/SubmitButton";
+import { fetchAuthor } from "@/api/userApi";
 
 const ArtCreate = () => {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.authReducer.loginUser);
+
+  const {data} = useQuery({
+    queryKey: ["fetchAuthor"],
+    queryFn: () => fetchAuthor(user?.userName),
+    retry: false,
+    enabled: !!user
+  })
 
   const convertBaseUrl = (url) => {
     const reader = new FileReader();
@@ -79,7 +88,7 @@ const ArtCreate = () => {
             />
           </div>
 
-          <div className="w-full md:w-2/3 flex flex-col gap-5">
+          <div className="w-full md:w-2/3 flex flex-col items-center gap-5">
             <input
               id="art-title"
               type="text"
@@ -89,22 +98,17 @@ const ArtCreate = () => {
               onChange={formik.handleChange}
               className="w-full text-3xl font-bold border-none focus:outline-none"
             />
-            <span className="h-16 flex items-center gap-3">
+            <span className="w-full h-16 flex items-center gap-3">
               <span className="w-16 rounded-full aspect-square overflow-hidden">
                 <img
-                  src={user?.avatar || defaultAvatar}
+                  src={data?.data.data.avatar || defaultAvatar}
                   alt="avatar"
                   className="object-contain"
                 />
               </span>
-              <p className="text-lg font-semibold">{user?.userName}</p>
+              <p className="text-lg font-semibold">{data?.data.data.userName}</p>
             </span>
-            <button
-              type="submit"
-              className="w-30 mx-auto bg-red-600 hover:bg-red-700 px-14 py-3 text-white font-semibold rounded-full"
-            >
-              Send
-            </button>
+            <SubmitButton disabled={!formik.values.url} loading={addImageMutation.isLoading}>Send</SubmitButton>
           </div>
         </form>
       ) : (

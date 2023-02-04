@@ -44,6 +44,7 @@ const AuthorPage = () => {
     fetchNextPage,
     isFetchingNextPage: artFetchingNextPage,
     isLoading: artLoading,
+    isSuccess: artSuccess,
   } = useInfiniteQuery({
     queryKey: ["authorArts", author],
     queryFn: ({ pageParam = 1 }) => fetchAuthorArts(author, pageParam),
@@ -53,6 +54,7 @@ const AuthorPage = () => {
         ? allPages.length + 1
         : undefined;
     },
+    retry: false
   });
 
   const getName = (fullName) => {
@@ -136,6 +138,7 @@ const AuthorPage = () => {
         artList={artData}
         fetchNextPage={fetchNextPage}
         loading={artLoading}
+        isSuccess={artSuccess}
         loadingNextPage={artFetchingNextPage}
         authorEdit={isAuthor}
         setEditModalOpen={setEditModalOpen}

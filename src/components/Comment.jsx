@@ -7,11 +7,11 @@ import {
   EnterOutlined,
 } from "@ant-design/icons";
 import TextareaAutosize from "react-textarea-autosize";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { editComment, deleteComment } from "@/api/commentApi";
-
 import DeleteModal from "./DeleteModal";
+import defaultAvatar from "@/public/default-avatar.png"
 
 const Comment = ({ comment, hasButtons, activeComment, setActiveComment }) => {
   const [editCommentContent, setEditCommentContent] = useState("");
@@ -107,7 +107,7 @@ const Comment = ({ comment, hasButtons, activeComment, setActiveComment }) => {
     <div className="flex items-start gap-3">
       <Link to={`/user/${comment.fromAuthorId.userName}`}>
         <img
-          src={comment.fromAuthorId.avatar}
+          src={comment.fromAuthorId.avatar || defaultAvatar}
           className="md:w-12 w-8 aspect-square rounded-full overflow-hidden object-cover"
         />
       </Link>

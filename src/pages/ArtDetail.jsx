@@ -9,7 +9,6 @@ import defaultAvatar from "@/public/default-avatar.png";
 import NotFound from "@/components/NotFound";
 import { useSelector } from "react-redux";
 import { fetchAuthor } from "@/api/userApi";
-import SubmitButton from "@/components/SubmitButton";
 import Comment from "@/components/Comment";
 import { fetchCommentsFromArt, postComment } from "@/api/commentApi";
 import { EnterOutlined } from "@ant-design/icons";
@@ -101,27 +100,26 @@ const ArtDetail = () => {
                   />
                 </div>
                 <div className="w-full lg:w-1/2 min-h-0 relative">
-                  
                   <div className="w-full lg:h-full h-96 lg:absolute relative overflow-auto">
-                  <div className="w-full min-h-20 sticky top-0 z-10 left-0 px-3 py-5 bg-slate-400 flex items-start justify-between gap-3 ">
-                    <img
-                      src={currentUserData?.data.data.avatar}
-                      className="w-12 aspect-square rounded-full overflow-hidden object-cover"
-                    />
-                    <div className="w-10/12 min-h-12 h-fit rounded-xl flex items-center justify-center p-3 bg-white">
-                      <TextareaAutosize
-                        maxRows={5}
-                        className="w-full resize-none px-3 text-sm border-none focus:outline-none"
-                        placeholder="Say something..."
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
+                    {currentUser && <div className="w-full min-h-20 sticky top-0 z-10 left-0 px-3 py-5 bg-slate-400 flex items-start justify-between gap-3 ">
+                      <img
+                        src={currentUserData?.data.data.avatar || defaultAvatar}
+                        className="w-12 aspect-square rounded-full overflow-hidden object-cover"
                       />
-                    </div>
-                    <EnterOutlined
-                      onClick={handleSubmitComment}
-                      className="w-8 md:w-12 text-white text-lg font-extrabold aspect-square rounded-full overflow-hidden bg-black/30 flex items-center justify-center"
-                    />
-                  </div>
+                      <div className="w-10/12 min-h-12 h-fit rounded-xl flex items-center justify-center p-3 bg-white">
+                        <TextareaAutosize
+                          maxRows={5}
+                          className="w-full resize-none px-3 text-sm border-none focus:outline-none"
+                          placeholder="Say something..."
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        />
+                      </div>
+                      <EnterOutlined
+                        onClick={handleSubmitComment}
+                        className="w-8 md:w-12 text-white text-lg font-extrabold aspect-square rounded-full overflow-hidden bg-black/30 flex items-center justify-center"
+                      />
+                    </div>}
                     <div className="w-full p-5 ">
                       <div className="flex flex-col gap-3 h-fit ">
                         <h1 className="w-full md:text-4xl text-2xl font-bold break-words">

@@ -16,6 +16,7 @@ const Search = () => {
         ? allPages.length + 1
         : undefined;
     },
+    retry: false
   });
 
   return (

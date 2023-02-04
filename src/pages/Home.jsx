@@ -5,21 +5,19 @@ import { fetchHomeArts } from "@/api/artApi";
 import MasonryArtList from "components/MasonryArtList";
 
 const Home = () => {
-  const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ["artList"],
-    queryFn: ({ pageParam = 1 }) => {
-      return fetchHomeArts(pageParam);
-    },
-    
-    /* enabled: false, */
-
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.data.numberOfPages > allPages.length
-        ? allPages.length + 1
-        : undefined;
-    },
-  });
-
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["artList"],
+      queryFn: ({ pageParam = 1 }) => {
+        return fetchHomeArts(pageParam);
+      },
+      retry: false,
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.data.numberOfPages > allPages.length
+          ? allPages.length + 1
+          : undefined;
+      },
+    });
 
   return (
     <div className="w-full">

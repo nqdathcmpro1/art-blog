@@ -14,7 +14,7 @@ const Layout = () => {
       <Navbar />
       {pathname !== "/" && <BackToHomepageButton />}
       <ScrollToTop />
-      <main className="w-full min-h-[calc(100vh_-_10rem)] grid place-items-center p-5 md:p-10">
+      <main className="w-full min-h-[calc(100vh_-_10rem)] p-5 md:p-10 flex justify-center">
         <Outlet />
       </main>
       <Footer />

@@ -33,7 +33,6 @@ export const editComment = async (req, res) => {
   const { comment } = req.params;
   const editComment = req.body;
 
-  console.log(editComment, comment);
   try {
     const editedComment = await Comment.findByIdAndUpdate(
       {

@@ -35,15 +35,16 @@ app.use(
   cors({
     origin: true,
     credentials: true,
+    optionSuccessStatus: 200,
   })
 );
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.sendStatus(200)
-})
+app.get("/", (req, res) => {
+  res.sendStatus(200);
+});
 
 app.use("/art", artRoute);
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
-app.use("/comment", commentRoute)
+app.use("/comment", commentRoute);

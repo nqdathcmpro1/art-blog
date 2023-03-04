@@ -23,12 +23,6 @@ export const userLogin = async (req, res) => {
 
     const { accessToken, refreshToken } = await generateToken(existedUser._id);
 
-    /* res.cookie("refreshJWT", refreshToken, {
-      httpOnly: true,
-      sameSite: "none",
-      secure: true,
-      maxAge: 60 * 60 * 24 * 1000,
-    }); */
 
     return res.status(200).json({ data: {
       _id: existedUser._id,
@@ -41,8 +35,7 @@ export const userLogin = async (req, res) => {
 
 export const refreshTokenUser = (req, res) => {
   const { refreshToken } = req.body;
-console.log(process.env.REFRESH_TOKEN_SECRET)
-  if (!refreshToken) res.status(403).json({ message: "Unauthorized" });
+  if (!refreshToken) res.status(403).json({ message: "Unauthorized not found " });
   else {
     jwt.verify(
       refreshToken,

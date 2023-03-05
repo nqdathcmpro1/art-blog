@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { loginThunk, refreshTokenThunk } from "@/thunks/authThunk";
+import { loginThunk, refreshTokenThunk, logoutThunk } from "@/thunks/authThunk";
 
 export const authSlice = createSlice({
   name: "authReducer",
@@ -13,12 +13,6 @@ export const authSlice = createSlice({
   reducers: {
     updateUser: (state, action) => {
       state.loginUser = action.payload;
-    },
-    logout: (state) => {
-      state.loading = false;
-      state.loginUser = null;
-      state.accessToken = null;
-      state.refreshToken = null;
     },
   },
   extraReducers: (builder) =>
@@ -36,11 +30,22 @@ export const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(refreshTokenThunk.fulfilled, (state, action) => {
-        console.log(action.payload);
+        state.accessToken = action.payload.data.data;
       })
-      /* .addCase(refreshTokenThunk.rejected, (state) => {
+
+      .addCase(refreshTokenThunk.rejected, (state, action) => {
         state.loginUser = null;
         state.accessToken = null;
         state.refreshToken = null;
-      }), */
+      })
+
+      .addCase(logoutThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(logoutThunk.fulfilled, (state) => {
+        state.loading = false;
+        state.loginUser = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+      }),
 });

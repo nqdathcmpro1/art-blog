@@ -103,7 +103,7 @@ const AvatarModal = ({ isOpen, setIsOpen, handleChange }) => {
         </>
       )}
       <div className="md:w-2/3 w-full flex items-center justify-between gap-5">
-        <button className="text-xl font-bold">Cancel</button>
+        <button className="text-xl font-bold" onClick={() => setIsOpen(false)}>Cancel</button>
         <SubmitButton
           disabled={!avatar}
           loading={false}

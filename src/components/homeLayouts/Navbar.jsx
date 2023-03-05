@@ -7,7 +7,7 @@ import { SearchOutlined, MenuOutlined } from "@ant-design/icons";
 import logo from "public/logo-art.png";
 import defaultAvatar from "public/default-avatar.png";
 import { fetchAuthor } from "@/api/userApi";
-import { authSlice } from "@/slices/authSlice";
+import { logoutThunk } from "@/thunks/authThunk";
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -61,8 +61,8 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    await dispatch(authSlice.actions.logout());
-    navigate("/auth/login");
+    const logoutUser = await dispatch(logoutThunk(user?._id));
+    if (logoutUser.payload.status === 200) navigate("/auth/login");
   };
 
   return (

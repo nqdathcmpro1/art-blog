@@ -67,7 +67,7 @@ const MasonryArtList = ({
                     />
                   </Link>
                   <div className="absolute w-full h-16 bottom-0 left-0 p-2 bg-gradient-to-b from-slate-900/80 to-slate-400/50 flex items-center justify-between">
-                    <h1 className="text-xl font-bold text-white truncate overflow-hidden">
+                    <h1 className="lg:text-xl md:text-lg text-base font-bold text-white truncate overflow-hidden">
                       {art.title}
                     </h1>
                     {authorEdit && (

@@ -1,9 +1,10 @@
 import axios from "axios";
 import store from "@/store";
+import { refreshToken } from "./authApi";
 import { refreshTokenThunk } from "@/thunks/authThunk";
 
 const instance = axios.create({
-  baseURL: "https://art-blog-demo.onrender.com/", /* "http://127.0.0.1:5000" */
+  baseURL: "https://art-blog-demo.onrender.com/", /* "http://127.0.0.1:5000", */
   headers: {
     Accept: "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -26,40 +27,21 @@ instance.interceptors.request.use(
   }
 );
 
-/* instance.interceptors.response.use(
-  (res) => {
-    return res;
-  },
-  async (err) => {
-    const config = err.config;
-    if (err.response?.status === 401 && !config._retry) {
-      config._retry = true;
 
-      const newAccessToken = await store.dispatch(refreshToken());
-      if (newAccessToken.meta.requestStatus === "fulfilled") {
-        config.headers.Authorization = `Bearer ${newAccessToken.payload.data}`;
-      }
-      if (newAccessToken) return axios(config);
-    }
-    return Promise.reject(err);
-  }
-); */
-
-/* instance.interceptors.response.use((res) => {
+instance.interceptors.response.use((res) => {
   return res;
 }, async (err) => {
   const config = err.config;
     if (err.response?.status === 401 && !config._retry) {
       config._retry = true;
-      const refreshToken = store.getState().authReducer.refreshToken;
-      const newAccessToken = await store.dispatch(refreshTokenThunk(refreshToken));
-      console.log(newAccessToken)
-      if (newAccessToken.meta.requestStatus === "fulfilled") {
-        config.headers.Authorization = `Bearer ${newAccessToken.payload.data}`;
+      const getRefreshToken = await store.getState().authReducer.refreshToken;
+      const newAccessToken = await store.dispatch(refreshTokenThunk(getRefreshToken))
+      if (newAccessToken.payload.status === 200) {
+        config.headers.Authorization = `Bearer ${newAccessToken.payload.data.data}`;
       }
-      if (newAccessToken) return axios(config);
+      return axios(config);
     }
     return Promise.reject(err);
-}); */
+});
 
 export default instance;

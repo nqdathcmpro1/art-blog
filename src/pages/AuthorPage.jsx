@@ -89,14 +89,14 @@ const AuthorPage = () => {
       >
         {authorData ? (
           <>
-            <span className="w-32 md:w-56 h-32 md:h-56 rounded-full overflow-hidden">
+            <span className="w-32 sm:w-44 md:w-56 aspect-square rounded-full overflow-hidden">
               <img
                 src={authorData?.data?.data?.avatar || defaultAvatar}
                 alt="author avatar"
                 className="w-full object-cover"
               />
             </span>
-            <h1 name="author-name" className="text-4xl font-bold w-fit">
+            <h1 name="author-name" className="md:text-4xl sm:text-xl text-center text-lg font-bold w-fit">
               {authorData?.data?.data?.fullName}
             </h1>
             <p

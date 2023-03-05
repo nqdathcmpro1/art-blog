@@ -91,7 +91,7 @@ const ArtDetail = () => {
         <>
           {artDetailSuccess ? (
             <>
-              <div className="lg:w-[900px] md:w-[600px] h-max w-10/12 my-5 shadow-2xl relative rounded-2xl bg-slate-100 overflow-hidden flex flex-col lg:flex-row">
+              <div className="lg:w-[900px] md:w-[600px] h-max w-11/12 my-5 shadow-2xl relative rounded-2xl bg-slate-100 overflow-hidden flex flex-col lg:flex-row">
                 <div className="w-full md:min-h-full lg:w-1/2 relative">
                   <img
                     className="w-full lg:rounded-l-2xl"

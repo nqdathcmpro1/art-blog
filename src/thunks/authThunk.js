@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { loginUser, refreshToken } from "@/api/authApi";
+import { loginUser, refreshToken, logoutUser } from "@/api/authApi";
 
 export const loginThunk = createAsyncThunk(
   "authSlice/loginUser",
@@ -21,5 +21,13 @@ export const refreshTokenThunk = createAsyncThunk(
   async (token) => {
     const data = await refreshToken(token);
     return data;
+  }
+);
+
+export const logoutThunk = createAsyncThunk(
+  "authSlice/logoutUser",
+  async (userId) => {
+    const data = await logoutUser(userId);
+    return data
   }
 );

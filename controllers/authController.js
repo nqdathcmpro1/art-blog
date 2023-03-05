@@ -61,8 +61,10 @@ export const refreshTokenUser = (req, res) => {
 };
 
 export const userLogout = async (req, res) => {
+  const { userId } = req.params
   try {
-    res.clearCookie("refreshJWT", { path: "/", domain: "localhost" }).send();
+    const logoutUser = await Auth.findOneAndDelete({ userId })
+    return res.status(200).json({ data: logoutUser })
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
